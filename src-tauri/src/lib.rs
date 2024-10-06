@@ -13,13 +13,13 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![greet])
         .setup(|app| {
-          // allowed the given directory
-          let scope = app.fs_scope();
-          scope.allow_directory("/", false);
-          dbg!(scope.allowed());
+            // allowed the given directory
+            let scope = app.fs_scope();
+            scope.allow_directory("/", false);
+            dbg!(scope.allowed());
 
-          Ok(())
-       })
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
