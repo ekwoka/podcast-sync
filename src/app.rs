@@ -2,16 +2,12 @@ use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
 use serde::{Deserialize, Serialize};
 pub mod fs;
-use fs::{File, Config, BaseDirectory};
-
-
+use fs::{BaseDirectory, Config, File};
 
 #[derive(Serialize, Deserialize)]
 struct GreetArgs<'a> {
     name: &'a str,
 }
-
-
 
 #[component]
 pub fn App() -> impl IntoView {
@@ -26,12 +22,24 @@ pub fn App() -> impl IntoView {
     let save = move |ev: SubmitEvent| {
         ev.prevent_default();
         spawn_local(async move {
-          let name = name.get_untracked();
-          if name.is_empty() {
-            return;
-          }
-          let config = Config { directory: BaseDirectory::AppConfig, ..Config::default() }
-            .create_if_missing().await.unwrap().update(name.as_str()).save().await.unwrap().load().await.unwrap();
+            let name = name.get_untracked();
+            if name.is_empty() {
+                return;
+            }
+            let config = Config {
+                directory: BaseDirectory::AppConfig,
+                ..Config::default()
+            }
+            .create_if_missing()
+            .await
+            .unwrap()
+            .update(name.as_str())
+            .save()
+            .await
+            .unwrap()
+            .load()
+            .await
+            .unwrap();
             set_greet_msg.set(config.to_string().unwrap());
         });
     };
