@@ -7,11 +7,11 @@
     "fs:default",
     {
       "identifier": "fs:allow-exists",
-      "allow": [{ "path": "$APPDATA/*" }, { "path": "$APPLOCALDATA/*" }]
+      "allow": [{ "path": "$APPDATA/*" }, { "path": "$APPLOCALDATA/*" }, { "path": "$APPCONFIG/*" }, { "path": "$APPCACHE/*" }]
     },
     {
       "identifier": "fs:allow-app-write",
-      "allow": [{ "path": "$APPDATA/.config.json" }, { "path": "$APPLOCALDATA/config.json" }]
+      "allow": [{ "path": "$APPDATA/*" }, { "path": "$APPLOCALDATA/*" }, { "path": "$APPCONFIG/*" }, { "path": "$APPCACHE/*" }]
     },
     "core:default",
     "shell:allow-open"

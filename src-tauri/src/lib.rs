@@ -15,7 +15,7 @@ pub fn run() {
         .setup(|app| {
             // allowed the given directory
             let scope = app.fs_scope();
-            scope.allow_directory("/", false);
+            scope.allow_directory("/", true);
             dbg!(scope.allowed());
 
             Ok(())

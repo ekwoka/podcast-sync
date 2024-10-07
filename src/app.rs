@@ -1,9 +1,8 @@
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
 use serde::{Deserialize, Serialize};
-pub mod config;
-use config::Config;
-use std::ops::Not;
+pub mod fs;
+use fs::{File, Config, BaseDirectory};
 
 
 
@@ -27,16 +26,13 @@ pub fn App() -> impl IntoView {
     let save = move |ev: SubmitEvent| {
         ev.prevent_default();
         spawn_local(async move {
-            if Config::exists().await.not() {
-              Config::create().await.unwrap();
-            };
-            let name = name.get_untracked();
-            if name.is_empty() {
-              return;
-            }
-            Config::update(name.as_str()).await.unwrap();
-            let config = Config::load().await.unwrap();
-            set_greet_msg.set(config.as_string().unwrap())
+          let name = name.get_untracked();
+          if name.is_empty() {
+            return;
+          }
+          let config = Config { directory: BaseDirectory::AppConfig, ..Config::default() }
+            .create_if_missing().await.unwrap().update(name.as_str()).save().await.unwrap().load().await.unwrap();
+            set_greet_msg.set(serde_json::to_string_pretty(&config).unwrap());
         });
     };
 
@@ -57,7 +53,9 @@ pub fn App() -> impl IntoView {
                 <button type="submit">"Greet"</button>
             </form>
 
-            <p><b>{ move || greet_msg.get() }</b></p>
+            <p style="text-align: left; max-width: fit-content; margin: 0 auto;">
+            <pre>{ move || greet_msg.get() }</pre>
+            </p>
         </main>
     }
 }
