@@ -72,6 +72,12 @@ pub struct Config {
   pub directory: BaseDirectory,
 }
 
+impl Config {
+  pub fn to_string(&self) -> Result<String, ron::Error> {
+    ron::ser::to_string_pretty(self, ron::ser::PrettyConfig::new().struct_names(true).to_owned())
+  }
+}
+
 fn default_config_dir() -> BaseDirectory {
   BaseDirectory::AppConfig
 }
@@ -90,7 +96,7 @@ impl File for Config {
   }
   async fn create(self) -> Result<Self, JsValue> {
     let fs_args = serde_wasm_bindgen::to_value(&FsArgs {base_dir: self.directory.clone() }).unwrap();
-    create("config.json", fs_args).await?;
+    create("config.ron", fs_args).await?;
     Ok(self)
   }
   fn update(mut self,content: &str) -> Self {
@@ -99,15 +105,15 @@ impl File for Config {
   }
   async fn load(mut self) -> Result<Self, JsValue> {
     let fs_args = serde_wasm_bindgen::to_value(&FsArgs {base_dir: self.directory.clone() }).unwrap();
-    let content: Config = from_str(&read_text_file("config.json",
+    let content: Config = ron::from_str(&read_text_file("config.ron",
                fs_args).await?.as_string().unwrap()).unwrap();
     self.latest_message = content.latest_message.clone();
     Ok(self)
   }
   async fn save(self) -> Result<Self, JsValue> {
     let fs_args = serde_wasm_bindgen::to_value(&FsArgs {base_dir: self.directory.clone() }).unwrap();
-    write_text_file("config.json",
-              serde_wasm_bindgen::to_value(&to_string_pretty(&self).unwrap()).unwrap().into(), fs_args).await?;
+    write_text_file("config.ron",
+              serde_wasm_bindgen::to_value(&self.to_string().unwrap()).unwrap().into(), fs_args).await?;
     Ok(self)
   }
 }

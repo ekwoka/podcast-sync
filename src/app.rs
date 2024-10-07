@@ -32,7 +32,7 @@ pub fn App() -> impl IntoView {
           }
           let config = Config { directory: BaseDirectory::AppConfig, ..Config::default() }
             .create_if_missing().await.unwrap().update(name.as_str()).save().await.unwrap().load().await.unwrap();
-            set_greet_msg.set(serde_json::to_string_pretty(&config).unwrap());
+            set_greet_msg.set(config.to_string().unwrap());
         });
     };
 
