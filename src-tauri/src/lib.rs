@@ -1,4 +1,5 @@
 use tauri_plugin_fs::FsExt;
+pub mod podcast;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
