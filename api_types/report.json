@@ -1,0 +1,36 @@
+{
+  "version": 0,
+  "root_name": "api_types",
+  "workspace_crates": {
+    "api_types": {
+      "full_path": "/Users/claire/git/projects/podcast-sync/api_types/Cargo.toml",
+      "dependencies": {
+        "quick-xml": {
+          "original_features": [
+            "serde",
+            "serialize"
+          ],
+          "successfully_removed_features": [
+            "serde"
+          ],
+          "unsuccessfully_removed_features": [
+            "serialize"
+          ]
+        },
+        "serde": {
+          "original_features": [
+            "derive",
+            "serde_derive",
+            "std"
+          ],
+          "successfully_removed_features": [
+            "serde_derive",
+            "std",
+            "derive"
+          ],
+          "unsuccessfully_removed_features": []
+        }
+      }
+    }
+  }
+}
