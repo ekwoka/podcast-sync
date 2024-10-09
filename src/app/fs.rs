@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use wasm_bindgen::prelude::*;
 
-#[derive(Serialize_repr, Deserialize_repr, Clone, Default)]
+#[derive(Serialize_repr, Deserialize_repr, Clone, Default, Debug)]
 #[repr(u16)]
 pub enum BaseDirectory {
     Audio = 1,
@@ -65,7 +65,7 @@ pub trait File: Sized {
     async fn save(self) -> Result<Self, JsValue>;
 }
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct Config {
     pub latest_message: String,
