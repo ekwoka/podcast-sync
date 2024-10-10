@@ -2,6 +2,7 @@ use js_sys::JsString;
 use serde::{Deserialize, Serialize};
 use serde_repr::{Deserialize_repr, Serialize_repr};
 use wasm_bindgen::prelude::*;
+use api_types::config::Config;
 
 #[derive(Serialize_repr, Deserialize_repr, Clone, Default, Debug)]
 #[repr(u16)]
@@ -67,20 +68,11 @@ pub trait File: Sized {
 
 #[derive(Serialize, Deserialize, Default, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct Config {
-    pub latest_message: String,
+pub struct ConfigFile {
+    pub content: Config,
 
     #[serde(skip_serializing, default = "default_config_dir")]
     pub directory: BaseDirectory,
-}
-
-impl Config {
-    pub fn to_string(&self) -> Result<String, ron::Error> {
-        ron::ser::to_string_pretty(
-            self,
-            ron::ser::PrettyConfig::new().struct_names(true).to_owned(),
-        )
-    }
 }
 
 fn default_config_dir() -> BaseDirectory {

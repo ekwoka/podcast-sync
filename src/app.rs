@@ -1,12 +1,20 @@
+use api_types::config::Config;
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::*;
-use serde::{Deserialize, Serialize};
-pub mod fs;
-use fs::{BaseDirectory, Config, File};
+use serde::Serialize;
+use wasm_bindgen::prelude::*;
 
-#[derive(Serialize, Deserialize)]
-struct GreetArgs<'a> {
-    name: &'a str,
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
+    async fn invoke(cmd: &str, args: JsValue) -> JsValue;
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"], js_name="invoke")]
+    async fn invoke_one(cmd: &str) -> JsValue;
+}
+
+#[derive(Serialize)]
+struct ConfigArgs<'a> {
+    config: &'a Config,
 }
 
 #[component]
@@ -16,16 +24,9 @@ pub fn App() -> impl IntoView {
     let current_config = create_resource(
         || (),
         |_| async move {
-            Config {
-                directory: BaseDirectory::AppConfig,
-                ..Config::default()
-            }
-            .create_if_missing()
-            .await
-            .unwrap()
-            .load()
-            .await
-            .unwrap()
+            let configData = invoke_one("load_config").await;
+            let config: Config = serde_wasm_bindgen::from_value(configData).unwrap();
+            config
         },
     );
     create_effect(move |_| match current_config.get() {
@@ -47,8 +48,13 @@ pub fn App() -> impl IntoView {
             if name.is_empty() {
                 return;
             }
-            if let Some(config) = config_data.get() {
-                let config = config.update(name.as_str()).save().await.unwrap();
+            if let Some(mut config) = config_data.get() {
+                config.latest_message = name.to_string();
+                invoke(
+                    "save_config",
+                    serde_wasm_bindgen::to_value(&ConfigArgs { config: &config }).unwrap(),
+                )
+                .await;
                 set_config_data.set(Some(config));
             }
         });
