@@ -4,6 +4,10 @@ use leptos::*;
 use serde::Serialize;
 use wasm_bindgen::prelude::*;
 
+use crate::components;
+
+stylance::import_crate_style!(styles, "src/main.css");
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "core"])]
@@ -48,7 +52,7 @@ pub fn App() -> impl IntoView {
             if name.is_empty() {
                 return;
             }
-            if let Some(mut config) = config_data.get() {
+            if let Some(mut config) = config_data.get_untracked() {
                 config.latest_message = name.to_string();
                 invoke(
                     "save_config",
@@ -62,19 +66,16 @@ pub fn App() -> impl IntoView {
 
     view! {
         <main class="container">
-            <div class="row">
-                "Podcasts"
-            </div>
-
-            <p>"Play some podcasts"</p>
-
             <form class="row" on:submit=save>
-                <input
-                    id="greet-input"
-                    placeholder="Enter a name..."
+                <components::TextInput
+                    id="search".to_string()
+                    name="search".to_string()
+                    placeholder="Search podcasts...".to_string()
                     on:input=update_value
                 />
-                <button type="submit">"Greet"</button>
+                <components::Button btn_type={components::ButtonType::Submit}>
+                    "Search"
+                </components::Button>
             </form>
 
 

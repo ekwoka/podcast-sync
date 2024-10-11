@@ -1,7 +1,7 @@
 mod app;
+mod components;
 
 use app::*;
-
 use leptos::*;
 
 fn main() {

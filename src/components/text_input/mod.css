@@ -1,0 +1,14 @@
+.input {
+  background-color: white;
+  appearance: none;
+  outline: none;
+  border-color: cornflowerblue;
+  border-width: 1px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  margin: 4px;
+  &::placeholder {
+    color: cornflowerblue;
+    font-weight: 400;
+  }
+}

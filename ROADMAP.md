@@ -1,0 +1,29 @@
+- [ ] Basic Podcast listening app
+  - [ ] subscribe to podcasts
+    - [ ] search for podcasts
+      - [x] basic search ui
+      - [ ] search itunes api
+      - [ ] display search results
+      - [ ] subscribe
+      - [ ] pull podcast feeds
+    - [ ] manage subscriptions
+      - [ ] show all podcasts
+      - [ ] show all episodes
+  - [ ] listen to podcasts
+    - [ ] select and play episode
+    - [ ] skip 15 seconds
+    - [ ] auto queueing
+      - [ ] adjust auto queue priorities and bevahior
+      - [ ] boost specific episodes
+    - [ ] see playlist
+  - [ ] sync between devices
+    - [ ] save and sync to file (icloud, onedrive)
+    - [ ] remote db
+      - [ ] set up turso
+      - [ ] in memory replication
+      - [ ] authenticate/shard
+      - [ ] encyption
+      - [ ] logging in/sharing keys
+  - [ ] cache episodes
+    - [ ] Cache API
+    - [ ] Choose Download Folder

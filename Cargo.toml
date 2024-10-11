@@ -16,6 +16,7 @@ console_error_panic_hook = "0.1.7"
 serde_repr = "0.1.19"
 serde_json = "1.0.128"
 ron = "0.8.1"
+stylance = "0.5.1"
 
 [workspace]
 members = [ "api_types","src-tauri"]
@@ -26,3 +27,11 @@ lto = true # Enables link-time-optimizations.
 opt-level = "s" # Prioritizes small binary size. Use `3` if you prefer speed.
 panic = "abort" # Higher performance by disabling panic handlers.
 strip = true # Ensures debug symbols are removed.
+
+[package.metadata.stylance]
+output_file = "./styles.css"
+folders = ["./src/"]
+# defaults to [".module.scss", ".module.css"]
+extensions = [".css",".module.css"]
+hash_len = 7
+class_name_pattern = "[name]-[hash]"
