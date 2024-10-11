@@ -1,18 +1,44 @@
+use std::{path::PathBuf, str::FromStr};
+
 use api_types::config::Config;
-use tauri_plugin_fs::FsExt;
+use tauri::{path::BaseDirectory, Manager};
+use tauri_plugin_fs::{FsExt, SafeFilePath};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn load_config() -> Config {
-    dbg!("load_config");
-    Config {
-        latest_message: "Hello, world!".to_string(),
+
+pub fn resolve_path<R: tauri::Runtime>(
+    webview: &tauri::Webview<R>,
+    path: SafeFilePath,
+    base_dir: Option<BaseDirectory>,
+) -> Option<PathBuf> {
+    let path = path.into_path().ok()?;
+    if let Some(base_dir) = base_dir {
+        webview.path().resolve(&path, base_dir).ok()
+    } else {
+        Some(path)
     }
 }
 
 #[tauri::command]
-fn save_config(config: Config) {
-    dbg!(config.to_string().unwrap());
+fn save_config<R: tauri::Runtime>(webview: tauri::Webview<R>, config: Config) {
+    let path = resolve_path(
+        &webview,
+        SafeFilePath::from_str("config.ron").unwrap(),
+        Some(BaseDirectory::AppConfig),
+    );
+    config
+        .to_writer(&mut std::fs::File::create(path.unwrap()).unwrap())
+        .unwrap();
+}
+
+#[tauri::command]
+fn load_config<R: tauri::Runtime>(webview: tauri::Webview<R>) -> Config {
+    let path = resolve_path(
+        &webview,
+        SafeFilePath::from_str("config.ron").unwrap(),
+        Some(BaseDirectory::AppConfig),
+    );
+    ron::de::from_reader(std::fs::File::open(path.unwrap()).unwrap()).unwrap()
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

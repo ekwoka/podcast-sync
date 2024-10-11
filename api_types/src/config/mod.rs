@@ -12,6 +12,13 @@ impl Config {
             ron::ser::PrettyConfig::new().struct_names(true).to_owned(),
         )
     }
+    pub fn to_writer(&self, writer: &mut impl std::io::Write) -> Result<(), ron::Error> {
+        ron::ser::to_writer_pretty(
+            writer,
+            self,
+            ron::ser::PrettyConfig::new().struct_names(true).to_owned(),
+        )
+    }
 }
 
 #[test]
