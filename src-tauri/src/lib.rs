@@ -11,7 +11,10 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::load_config,
             commands::save_config,
-            commands::search_itunes
+            commands::search_itunes,
+            commands::add_subscription,
+            commands::remove_subscription,
+            commands::load_subscriptions
         ])
         .setup(|app| {
             // allowed the given directory

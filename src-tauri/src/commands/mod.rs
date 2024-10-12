@@ -1,6 +1,7 @@
 mod config;
 mod itunes;
-
-pub use itunes::*;
+mod subscriptions;
 
 pub use config::*;
+pub use itunes::*;
+pub use subscriptions::*;

@@ -4,6 +4,11 @@ body {
 
 .container {
   padding: 16px 24px;
+  display: flex;
+  gap: 16px;
+  & > div {
+    flex-grow: 1;
+  }
 }
 
 .results_grid {

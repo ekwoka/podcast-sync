@@ -1,4 +1,5 @@
 use api_types::itunes::*;
+use api_types::subscriptions::Subscriptions;
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::{html::*, *};
 use serde::{Deserialize, Serialize};
@@ -25,6 +26,14 @@ struct ItunesSearchArgs<'a> {
 pub fn app() -> impl IntoView {
     let (query, set_query) = create_signal(String::new());
     let (results, set_results) = create_signal::<Option<Vec<ItunesResult>>>(None);
+    let subscriptions = create_resource(
+        || (),
+        |_| async move {
+            let response = invoke_one("load_subscriptions").await;
+            let subscriptions: Subscriptions = serde_wasm_bindgen::from_value(response).unwrap();
+            subscriptions
+        },
+    );
 
     let update_value = move |ev| {
         let v = event_target_value(&ev);
@@ -57,36 +66,51 @@ pub fn app() -> impl IntoView {
 
     view! {
         <main class=styles::container>
-            <form on:submit=search>
-                <components::TextInput
-                    id="search".to_string()
-                    name="search".to_string()
-                    placeholder="Search podcasts...".to_string()
-                    on:input=update_value
-                />
-                <components::Button btn_type=components::ButtonType::Submit>
-                    "Search"
-                </components::Button>
-            </form>
+            <div>
+                <form on:submit=search>
+                    <components::TextInput
+                        id="search".to_string()
+                        name="search".to_string()
+                        placeholder="Search podcasts...".to_string()
+                        on:input=update_value
+                    />
+                    <components::Button btn_type=components::ButtonType::Submit>
+                        "Search"
+                    </components::Button>
+                </form>
 
-            {move || match results.get() {
-                None => div().child("No Results"),
-                Some(results) => {
-                    view! {
-                        <div class=styles::results_grid>
-                            {results
-                                .clone()
-                                .iter()
-                                .map(|result| {
-                                    components::ItunesResult(components::ItunesResultProps {
-                                        show: result.clone(),
+                {move || match results.get() {
+                    None => div().child("No Results"),
+                    Some(results) => {
+                        view! {
+                            <div class=styles::results_grid>
+                                {results
+                                    .clone()
+                                    .iter()
+                                    .map(|result| {
+                                        components::ItunesResult(components::ItunesResultProps {
+                                            show: result.clone(),
+                                        })
                                     })
-                                })
-                                .collect_view()}
-                        </div>
+                                    .collect_view()}
+                            </div>
+                        }
                     }
-                }
-            }}
+                }}
+            </div>
+            <Suspense fallback=|| {
+                div().child("Loading...")
+            }>
+                {move || {
+                    subscriptions
+                        .get()
+                        .map(|subs| {
+                            view! {
+                                <components::SubscriptionList subscriptions=subs.subscriptions />
+                            }
+                        })
+                }}
+            </Suspense>
         </main>
     }
 }
