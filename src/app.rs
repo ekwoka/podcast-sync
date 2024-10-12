@@ -1,6 +1,6 @@
 use api_types::itunes::*;
 use leptos::leptos_dom::ev::SubmitEvent;
-use leptos::*;
+use leptos::{html::*, *};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 
@@ -57,47 +57,33 @@ pub fn App() -> impl IntoView {
     };
 
     view! {
-        <main class="container">
-            <form class="row" on:submit=search>
+        <main class=styles::container>
+            <form on:submit=search>
                 <components::TextInput
                     id="search".to_string()
                     name="search".to_string()
                     placeholder="Search podcasts...".to_string()
                     on:input=update_value
                 />
-                <components::Button btn_type={components::ButtonType::Submit}>
-                  "Search"
+                <components::Button btn_type=components::ButtonType::Submit>
+                    "Search"
                 </components::Button>
             </form>
 
-
             {move || match results.get() {
-                None => {
-                    view! {
-                        <div>"No Results"</div>
-                    }
-                }
+                None => div().child("No Results"),
                 Some(results) => {
                     view! {
-                        <div style="display: grid; gap: 8px; grid-template-columns: repeat(2, 1fr);">
-                            {results.clone().iter().map(|result| view!{
-                              <div style="display: flex; flex-direction: column; gap: 4px;">
-                                <h2>{match result.collection_name.clone() {
-                                  Some(title) => title,
-                                  None => "No Title".to_string()
-                                }
-                                }
-                                </h2>
-                                {match result.artwork_url100.clone() {
-                                  Some(url) => view!{
-                                    <span><img src={url} alt="Artwork" /></span>
-                                  },
-                                  None => view!{
-                                    <span>"No Artwork"</span>
-                                  }
-                                }}
-                                </div>
-                            }).collect_view()}
+                        <div class=styles::results_grid>
+                            {results
+                                .clone()
+                                .iter()
+                                .map(|result| {
+                                    components::ItunesResult(components::ItunesResultProps {
+                                        show: result.clone(),
+                                    })
+                                })
+                                .collect_view()}
                         </div>
                     }
                 }

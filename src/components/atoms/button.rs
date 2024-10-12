@@ -1,5 +1,5 @@
 use leptos::*;
-stylance::import_crate_style!(styles, "src/components/button/mod.css");
+stylance::import_crate_style!(styles, "src/components/atoms/button.css");
 
 #[derive(Default)]
 pub enum ButtonType {
@@ -24,8 +24,10 @@ impl std::fmt::Display for ButtonType {
 }
 
 #[component]
-pub fn Button(btn_type: ButtonType, children: Children) -> impl IntoView {
+pub fn button(btn_type: ButtonType, children: Children) -> impl IntoView {
     view! {
-      <button type={btn_type.to_string()} class=styles::button>{children()}</button>
+        <button type=btn_type.to_string() class=styles::button>
+            {children()}
+        </button>
     }
 }

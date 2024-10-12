@@ -27,6 +27,7 @@ pub struct ItunesResult {
     pub artwork_url30: Option<String>,
     pub artwork_url60: Option<String>,
     pub artwork_url100: Option<String>,
+    pub artwork_url600: Option<String>,
     pub collection_price: f32,
     pub track_price: f32,
     pub release_date: Option<String>,
