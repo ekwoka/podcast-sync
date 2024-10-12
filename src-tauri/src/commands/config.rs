@@ -2,7 +2,7 @@ use std::{path::PathBuf, str::FromStr};
 
 use api_types::config::Config;
 use tauri::{path::BaseDirectory, Manager};
-use tauri_plugin_fs::{FsExt, SafeFilePath};
+use tauri_plugin_fs::SafeFilePath;
 
 pub fn resolve_path<R: tauri::Runtime>(
     webview: &tauri::Webview<R>,

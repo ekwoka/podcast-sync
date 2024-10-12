@@ -10,7 +10,8 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             commands::load_config,
-            commands::save_config
+            commands::save_config,
+            commands::search_itunes
         ])
         .setup(|app| {
             // allowed the given directory

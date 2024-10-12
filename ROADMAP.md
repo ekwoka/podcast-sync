@@ -2,7 +2,7 @@
   - [ ] subscribe to podcasts
     - [ ] search for podcasts
       - [x] basic search ui
-      - [ ] search itunes api
+      - [x] search itunes api
       - [ ] display search results
       - [ ] subscribe
       - [ ] pull podcast feeds
