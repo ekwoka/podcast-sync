@@ -35,12 +35,13 @@ impl Subscriptions {
 
 #[test]
 fn can_parse_subscriptions() {
-    let json = r#"{"subscriptions":[{"title":"Regulation Podcast","feedUrl":"https://feed.com","lastUpdated":"2014-11-28T12:45:59.324310806Z"}]}"#;
+    let json = r#"{"subscriptions":[{"id": 0, "title":"Regulation Podcast","feedUrl":"https://feed.com","lastUpdated":"2014-11-28T12:45:59.324310806Z"}]}"#;
     let subs: Subscriptions = serde_json::from_str(json).expect("Test data is validated");
     assert_eq!(
         subs,
         Subscriptions {
             subscriptions: vec![Subscription {
+                id: 0,
                 title: "Regulation Podcast".to_owned(),
                 feed_url: "https://feed.com".to_owned(),
                 image_url: None,

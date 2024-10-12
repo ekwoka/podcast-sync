@@ -1,11 +1,11 @@
 use crate::components;
-use api_types::itunes::ItunesResult;
+use api_types::{itunes::ItunesResult, subscriptions::Subscription};
 use leptos::{html::*, *};
 
 stylance::import_crate_style!(styles, "src/components/molecules/itunes_result.css");
 
 #[component]
-pub fn itunes_result(show: ItunesResult) -> impl IntoView {
+pub fn itunes_result(show: ItunesResult, subscribe: Action<Subscription, ()>) -> impl IntoView {
     view! {
         <div class=styles::show>
             <h2 class=styles::title>
@@ -25,6 +25,21 @@ pub fn itunes_result(show: ItunesResult) -> impl IntoView {
                 }
                 None => span().child("No Artwork"),
             }}
+            <components::Button
+                btn_type=components::ButtonType::Button
+                on:click=move |_| {
+                    subscribe
+                        .dispatch(Subscription {
+                            id: show.collection_id.clone(),
+                            title: show.collection_name.clone().unwrap_or("No Title".to_string()),
+                            feed_url: show.feed_url.clone().unwrap_or("".to_string()),
+                            image_url: show.artwork_url100.clone(),
+                            last_updated: chrono::Utc::now(),
+                        })
+                }
+            >
+                "Subscribe"
+            </components::Button>
         </div>
     }
 }

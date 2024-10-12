@@ -12,8 +12,8 @@ pub fn run() {
             commands::load_config,
             commands::save_config,
             commands::search_itunes,
-            commands::add_subscription,
-            commands::remove_subscription,
+            commands::subscribe,
+            commands::unsubscribe,
             commands::load_subscriptions
         ])
         .setup(|app| {

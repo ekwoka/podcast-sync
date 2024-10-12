@@ -1,5 +1,5 @@
 use api_types::itunes::*;
-use api_types::subscriptions::Subscriptions;
+use api_types::subscriptions::*;
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::{html::*, *};
 use serde::{Deserialize, Serialize};
@@ -22,10 +22,15 @@ struct ItunesSearchArgs<'a> {
     query: &'a str,
 }
 
+#[derive(Serialize, Deserialize)]
+struct SubscribeArgs {
+    subscription: Subscription,
+}
+
 #[component]
 pub fn app() -> impl IntoView {
-    let (query, set_query) = create_signal(String::new());
-    let (results, set_results) = create_signal::<Option<Vec<ItunesResult>>>(None);
+    let query = create_rw_signal(String::new());
+    let results = create_rw_signal::<Option<Vec<ItunesResult>>>(None);
     let subscriptions = create_resource(
         || (),
         |_| async move {
@@ -34,10 +39,24 @@ pub fn app() -> impl IntoView {
             subscriptions
         },
     );
+    let subscribe = create_action(move |input: &Subscription| {
+        let input = input.clone();
+        async move {
+            invoke(
+                "subscribe",
+                serde_wasm_bindgen::to_value(&SubscribeArgs {
+                    subscription: input,
+                })
+                .unwrap(),
+            )
+            .await;
+            subscriptions.refetch();
+        }
+    });
 
     let update_value = move |ev| {
         let v = event_target_value(&ev);
-        set_query.set(v);
+        query.set(v);
     };
 
     let search = move |ev: SubmitEvent| {
@@ -55,11 +74,11 @@ pub fn app() -> impl IntoView {
                 .unwrap(),
             )
             .await;
-            let results: ItunesResponse = serde_wasm_bindgen::from_value(response).unwrap();
-            if results.result_count > 0 {
-                set_results.set(Some(results.results.clone()));
+            let response: ItunesResponse = serde_wasm_bindgen::from_value(response).unwrap();
+            if response.result_count > 0 {
+                results.set(Some(response.results.clone()));
             } else {
-                set_results.set(None);
+                results.set(None);
             }
         });
     };
@@ -90,6 +109,7 @@ pub fn app() -> impl IntoView {
                                     .map(|result| {
                                         components::ItunesResult(components::ItunesResultProps {
                                             show: result.clone(),
+                                            subscribe: subscribe.clone(),
                                         })
                                     })
                                     .collect_view()}

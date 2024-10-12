@@ -18,7 +18,7 @@ pub fn resolve_path<R: tauri::Runtime>(
 }
 
 #[tauri::command]
-pub fn add_subscription<R: tauri::Runtime>(
+pub fn subscribe<R: tauri::Runtime>(
     webview: tauri::Webview<R>,
     subscription: Subscription,
 ) -> Subscription {
@@ -41,7 +41,7 @@ pub fn add_subscription<R: tauri::Runtime>(
 }
 
 #[tauri::command]
-pub fn remove_subscription<R: tauri::Runtime>(
+pub fn unsubscribe<R: tauri::Runtime>(
     webview: tauri::Webview<R>,
     subscription_id: i32,
 ) -> Subscription {
