@@ -5,6 +5,8 @@
       - [x] search itunes api
       - [x] display search results
       - [ ] subscribe
+        - [ ] save subscription info
+        - [ ] load subscription info
       - [ ] pull podcast feeds
     - [ ] manage subscriptions
       - [ ] show all podcasts

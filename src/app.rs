@@ -22,9 +22,8 @@ struct ItunesSearchArgs<'a> {
 }
 
 #[component]
-pub fn App() -> impl IntoView {
+pub fn app() -> impl IntoView {
     let (query, set_query) = create_signal(String::new());
-    let (message, set_message) = create_signal::<Option<String>>(None);
     let (results, set_results) = create_signal::<Option<Vec<ItunesResult>>>(None);
 
     let update_value = move |ev| {
