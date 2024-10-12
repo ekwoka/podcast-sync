@@ -16,29 +16,10 @@ extern "C" {
     async fn invoke_one(cmd: &str) -> JsValue;
 }
 
-#[derive(Serialize)]
-struct ConfigArgs<'a> {
-    config: &'a Config,
-}
-
 #[component]
 pub fn App() -> impl IntoView {
     let (value, set_value) = create_signal(String::new());
-    let (config_data, set_config_data) = create_signal::<Option<Config>>(None);
-    let current_config = create_resource(
-        || (),
-        |_| async move {
-            let configData = invoke_one("load_config").await;
-            let config: Config = serde_wasm_bindgen::from_value(configData).unwrap();
-            config
-        },
-    );
-    create_effect(move |_| match current_config.get() {
-        None => (),
-        Some(config) => {
-            set_config_data.set(Some(config));
-        }
-    });
+    let (message, set_message) = create_signal::<Option<String>>(None);
 
     let update_value = move |ev| {
         let v = event_target_value(&ev);
@@ -52,15 +33,7 @@ pub fn App() -> impl IntoView {
             if name.is_empty() {
                 return;
             }
-            if let Some(mut config) = config_data.get_untracked() {
-                config.latest_message = name.to_string();
-                invoke(
-                    "save_config",
-                    serde_wasm_bindgen::to_value(&ConfigArgs { config: &config }).unwrap(),
-                )
-                .await;
-                set_config_data.set(Some(config));
-            }
+            set_message.set(Some(name));
         });
     };
 
@@ -74,21 +47,21 @@ pub fn App() -> impl IntoView {
                     on:input=update_value
                 />
                 <components::Button btn_type={components::ButtonType::Submit}>
-                    "Search"
+                  "Search"
                 </components::Button>
             </form>
 
 
-            {move || match config_data.get() {
+            {move || match message.get() {
                 None => {
                     view! {
-                        <p>"Loading..."</p>
+                        <p>"Ready"</p>
                     }
                 }
-                Some(config) => {
+                Some(message) => {
                     view! {
                         <p style="text-align: left; max-width: fit-content; margin: 0 auto;">
-                            <pre>{ move || config.to_string().unwrap() }</pre>
+                            <pre>{ move || message.clone() }</pre>
                         </p>
                     }
                 }
