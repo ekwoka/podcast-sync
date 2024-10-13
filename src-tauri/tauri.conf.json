@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "net.thekwoka.podcast-sync",
   "build": {
-    "beforeDevCommand": "trunk serve",
+    "beforeDevCommand": "stylance . && trunk serve",
     "devUrl": "http://localhost:1420",
-    "beforeBuildCommand": "trunk build",
+    "beforeBuildCommand": "stylance . && trunk build --release",
     "frontendDist": "../dist"
   },
   "app": {
@@ -16,7 +16,6 @@
         "title": "podcast-sync",
         "width": 800,
         "height": 600
-        
       }
     ],
     "security": {

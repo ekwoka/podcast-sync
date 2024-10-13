@@ -21,19 +21,19 @@ strum_macros = "0.26.4"
 chrono = "0.4.38"
 
 [workspace]
-members = [ "api_types","src-tauri"]
+members = ["api_types", "src-tauri"]
 
 [profile.release]
 codegen-units = 1 # Allows LLVM to perform better optimization.
-lto = true # Enables link-time-optimizations.
-opt-level = "s" # Prioritizes small binary size. Use `3` if you prefer speed.
-panic = "abort" # Higher performance by disabling panic handlers.
-strip = true # Ensures debug symbols are removed.
+lto = true        # Enables link-time-optimizations.
+opt-level = "z"   # Prioritizes small binary size. Use `3` if you prefer speed.
+panic = "abort"   # Higher performance by disabling panic handlers.
+strip = true      # Ensures debug symbols are removed.
 
 [package.metadata.stylance]
 output_file = "./styles.css"
 folders = ["./src/"]
 # defaults to [".module.scss", ".module.css"]
-extensions = [".css",".module.css"]
+extensions = [".css", ".module.css"]
 hash_len = 7
 class_name_pattern = "[name]-[hash]"
