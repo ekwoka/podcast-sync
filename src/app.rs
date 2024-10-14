@@ -109,7 +109,7 @@ pub fn app() -> impl IntoView {
                                     .map(|result| {
                                         components::ItunesResult(components::ItunesResultProps {
                                             show: result.clone(),
-                                            subscribe: subscribe.clone(),
+                                            subscribe,
                                         })
                                     })
                                     .collect_view()}

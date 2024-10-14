@@ -4,9 +4,9 @@
       - [x] basic search ui
       - [x] search itunes api
       - [x] display search results
-      - [ ] subscribe
-        - [ ] save subscription info
-        - [ ] load subscription info
+      - [x] subscribe
+        - [x] save subscription info
+        - [x] load subscription info
       - [ ] pull podcast feeds
     - [ ] manage subscriptions
       - [ ] show all podcasts
@@ -29,3 +29,6 @@
   - [ ] cache episodes
     - [ ] Cache API
     - [ ] Choose Download Folder
+- [ ] android Auto
+  - [ ] Media Service
+  - [ ] Android Auto UI

@@ -19,7 +19,7 @@ pub fn itunes_result(show: ItunesResult, subscribe: Action<Subscription, ()>) ->
                     span()
                         .child(
                             components::ItunesThumb(components::ItunesThumbProps {
-                                url: url,
+                                url,
                             }),
                         )
                 }
@@ -30,7 +30,7 @@ pub fn itunes_result(show: ItunesResult, subscribe: Action<Subscription, ()>) ->
                 on:click=move |_| {
                     subscribe
                         .dispatch(Subscription {
-                            id: show.collection_id.clone(),
+                            id: show.collection_id,
                             title: show.collection_name.clone().unwrap_or("No Title".to_string()),
                             feed_url: show.feed_url.clone().unwrap_or("".to_string()),
                             image_url: show.artwork_url100.clone(),

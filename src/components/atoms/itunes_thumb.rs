@@ -14,7 +14,7 @@ pub fn itunes_thumb(url: String) -> impl IntoView {
 }
 
 fn generate_srcset(url: &str) -> String {
-    vec![128, 256, 512, 1024]
+    [128, 256, 512, 1024]
         .iter()
         .map(|size| {
             format!(

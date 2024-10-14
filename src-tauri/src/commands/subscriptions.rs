@@ -71,7 +71,7 @@ pub fn load_subscriptions<R: tauri::Runtime>(webview: tauri::Webview<R>) -> Subs
 fn retrieve_subscriptions<R: tauri::Runtime>(webview: &tauri::Webview<R>) -> Subscriptions {
     SafeFilePath::from_str("subscriptions.ron")
         .ok()
-        .and_then(|path| resolve_path(&webview, path, Some(BaseDirectory::AppData)))
+        .and_then(|path| resolve_path(webview, path, Some(BaseDirectory::AppData)))
         .and_then(|path| {
             if path.exists() {
                 ron::de::from_reader(std::fs::File::open(path).ok()?).ok()
@@ -89,7 +89,7 @@ fn save_subscriptions<R: tauri::Runtime>(
     subscriptions: Subscriptions,
 ) {
     let path = resolve_path(
-        &webview,
+        webview,
         SafeFilePath::from_str("subscriptions.ron").unwrap(),
         Some(BaseDirectory::AppData),
     );
