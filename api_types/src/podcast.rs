@@ -4,17 +4,17 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
 pub struct Feed {
     #[serde(rename = "@version")]
-    pub version: String,
+    pub version: Option<String>,
     #[serde(rename = "@xmlns:itunes")]
-    pub xmlns_itunes: String,
+    pub xmlns_itunes: Option<String>,
     #[serde(rename = "@xmlns:googleplay")]
-    pub xmlns_googleplay: String,
+    pub xmlns_googleplay: Option<String>,
     #[serde(rename = "@xmlns:atom")]
-    pub xmlns_atom: String,
+    pub xmlns_atom: Option<String>,
     #[serde(rename = "@xmlns:media")]
-    pub xmlns_media: String,
+    pub xmlns_media: Option<String>,
     #[serde(rename = "@xmlns:content")]
-    pub xmlns_content: String,
+    pub xmlns_content: Option<String>,
     #[serde(rename = "$text")]
     pub text: Option<String>,
     #[serde(rename = "channel")]
@@ -48,7 +48,7 @@ pub struct Podcast {
     /*     #[serde(rename = "image")]
     pub itunes_image: ChannelItunesImage, */
     #[serde(rename = "itunes-category")]
-    pub itunes_category: ItunesCategory,
+    pub itunes_category: Vec<ItunesCategory>,
     #[serde(rename = "item")]
     pub episodes: Vec<Episode>,
 }
@@ -183,4 +183,18 @@ fn parses_xml_two() {
         .episodes
         .iter()
         .any(|episode| episode.title == "The Infernal Machine"));
+}
+
+#[test]
+fn parses_xml_three() {
+    let xml = include_str!("../test_data/test_feed_three.rss");
+    let podcast = parse_feed(xml).unwrap().podcast;
+    assert_eq!(podcast.title, "The Anthropocene Reviewed");
+    assert_eq!(podcast.description, "The Anthropocene is the current geological age, in which human activity has profoundly shaped the planet and its biodiversity. On The Anthropocene Reviewed, #1 New York Times bestselling author John Green (The Fault in Our Stars, Turtles All the Way Down) reviews different facets of the human-centered planet on a five-star scale. WNYC Studios is a listener-supported producer of other leading podcasts including On the Media, Snap Judgment, Death, Sex & Money, Nancy and Here’s the Thing with Alec Baldwin. © WNYC Studios");
+    assert_eq!(podcast.image.url, "https://image.simplecastcdn.com/images/d48cf57e-8709-499d-a9c6-1c6264aff730/d7543167-91d7-455a-9048-b1843e740206/3000x3000/tar-complexly.jpg?aid=rss_feed");
+
+    assert!(podcast
+        .episodes
+        .iter()
+        .any(|episode| episode.title == "Lascaux Paintings and the Taco Bell Breakfast Menu"));
 }
