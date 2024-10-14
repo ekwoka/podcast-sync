@@ -1,4 +1,4 @@
-use api_types::podcast::Podcast;
+use api_types::podcast_feed::Podcast;
 use leptos::{html::*, *};
 
 #[component]

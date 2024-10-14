@@ -1,4 +1,4 @@
-use api_types::{podcast::*, subscriptions::*};
+use api_types::{podcast_feed::*, subscriptions::*};
 
 #[tauri::command]
 pub async fn load_podcast_feed(podcast: Subscription) -> Result<Podcast, String> {

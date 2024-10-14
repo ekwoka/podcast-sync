@@ -2,7 +2,6 @@ use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Default, Clone, Debug, PartialEq)]
-#[serde(rename_all = "camelCase")]
 pub struct Subscriptions {
     pub subscriptions: Vec<Subscription>,
 }

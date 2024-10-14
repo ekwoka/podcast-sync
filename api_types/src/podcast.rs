@@ -1,200 +1,122 @@
-use quick_xml::{de::from_str, DeError};
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct Feed {
-    #[serde(rename = "@version")]
-    pub version: Option<String>,
-    #[serde(rename = "@xmlns:itunes")]
-    pub xmlns_itunes: Option<String>,
-    #[serde(rename = "@xmlns:googleplay")]
-    pub xmlns_googleplay: Option<String>,
-    #[serde(rename = "@xmlns:atom")]
-    pub xmlns_atom: Option<String>,
-    #[serde(rename = "@xmlns:media")]
-    pub xmlns_media: Option<String>,
-    #[serde(rename = "@xmlns:content")]
-    pub xmlns_content: Option<String>,
-    #[serde(rename = "$text")]
-    pub text: Option<String>,
-    #[serde(rename = "channel")]
-    pub podcast: Podcast,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
+#[derive(Debug, Serialize, Deserialize, Default, Clone, PartialEq)]
 pub struct Podcast {
-    #[serde(rename = "$text")]
-    pub text: Option<String>,
+    pub id: i32,
     pub title: String,
-    pub link: String,
-    pub language: String,
-    pub copyright: String,
     pub description: String,
     pub image: Image,
-    #[serde(rename = "itunes-explicit")]
-    pub itunes_explicit: Option<String>,
-    #[serde(rename = "itunes-type")]
-    pub itunes_type: Option<String>,
-    #[serde(rename = "itunes-subtitle")]
-    pub itunes_subtitle: Option<String>,
-    #[serde(rename = "itunes-author")]
-    pub itunes_author: Option<String>,
-    #[serde(rename = "itunes-summary")]
-    pub itunes_summary: Option<String>,
-    #[serde(rename = "encoded")]
-    pub content_encoded: Option<String>,
-    #[serde(rename = "itunes-owner")]
-    pub itunes_owner: ItunesOwner,
-    /*     #[serde(rename = "image")]
-    pub itunes_image: ChannelItunesImage, */
-    #[serde(rename = "itunes-category")]
-    pub itunes_category: Vec<ItunesCategory>,
-    #[serde(rename = "item")]
+    pub link: String,
     pub episodes: Vec<Episode>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct AtomLink {
-    #[serde(rename = "@href")]
-    pub href: String,
-    #[serde(rename = "@rel")]
-    pub rel: String,
-    #[serde(rename = "@type")]
-    pub atom_link_type: String,
+impl Podcast {
+    pub fn with_id(mut self, id: i32) -> Self {
+        self.id = id;
+        self
+    }
 }
 
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
+impl From<crate::podcast_feed::Podcast> for Podcast {
+    fn from(feed_podcast: crate::podcast_feed::Podcast) -> Self {
+        Self {
+            id: 0,
+            title: feed_podcast.title,
+            description: feed_podcast.description,
+            image: feed_podcast.image.into(),
+            link: feed_podcast.link,
+            episodes: feed_podcast
+                .episodes
+                .into_iter()
+                .map(|episode| episode.into())
+                .collect(),
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Default, Clone, PartialEq)]
 pub struct Image {
-    #[serde(rename = "$text")]
-    pub text: Option<String>,
     pub url: String,
     pub title: String,
-    pub link: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct ItunesOwner {
-    #[serde(rename = "$text")]
-    pub text: Option<String>,
-    #[serde(rename = "itunes-name")]
-    pub itunes_name: String,
-    #[serde(rename = "itunes-email")]
-    pub itunes_email: String,
+impl From<crate::podcast_feed::Image> for Image {
+    fn from(feed_image: crate::podcast_feed::Image) -> Self {
+        Self {
+            url: feed_image.url,
+            title: feed_image.title,
+        }
+    }
 }
 
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct ChannelItunesImage {
-    #[serde(rename = "@href")]
-    pub href: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct ItunesCategory {
-    #[serde(rename = "@text")]
-    pub text: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
+#[derive(Debug, Serialize, Deserialize, Default, Clone, PartialEq)]
 pub struct Episode {
-    #[serde(rename = "$text")]
-    pub text: Option<String>,
-    #[serde(rename = "itunes-image")]
-    pub itunes_image: Option<ItemItunesImage>,
-    #[serde(rename = "itunes-episode")]
-    pub itunes_episode: Option<String>,
-    #[serde(rename = "itunes-season")]
-    pub itunes_season: Option<String>,
     pub title: String,
     pub description: String,
-    #[serde(rename = "pubDate")]
-    pub pub_date: String,
-    #[serde(rename = "itunes-title")]
-    pub itunes_title: Option<String>,
-    #[serde(rename = "itunes-episodeType")]
-    pub itunes_episode_type: Option<String>,
-    #[serde(rename = "itunes-author")]
-    pub itunes_author: Option<String>,
-    #[serde(rename = "itunes-subtitle")]
-    pub itunes_subtitle: Option<String>,
-    #[serde(rename = "itunes-summary")]
-    pub itunes_summary: Option<String>,
-    #[serde(rename = "encoded")]
-    pub content_encoded: Option<String>,
-    #[serde(rename = "itunes-duration")]
-    pub itunes_duration: Option<String>,
-    pub guid: Guid,
-    pub enclosure: Enclosure,
-    #[serde(rename = "itunes-explicit")]
-    pub itunes_explicit: Option<String>,
-    pub link: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct ItemItunesImage {
-    #[serde(rename = "@href")]
-    pub href: String,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct Guid {
-    #[serde(rename = "@isPermaLink")]
-    pub is_perma_link: String,
-    #[serde(rename = "$text")]
-    pub text: Option<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default, Clone)]
-pub struct Enclosure {
-    #[serde(rename = "@url")]
+    pub published: chrono::NaiveDateTime,
     pub url: String,
-    #[serde(rename = "@length")]
-    pub length: String,
-    #[serde(rename = "@type")]
-    pub enclosure_type: String,
+    pub length: i32,
+    pub mime_type: String,
+    pub duration: Option<String>,
+    pub progress: i32,
+    pub listened: bool,
 }
 
-pub fn parse_feed(xml: &str) -> Result<Feed, DeError> {
-    let feed: Feed = from_str(&xml.replace("itunes:", "itunes-").replace("atom:", "atom-"))?;
-    Ok(feed)
+impl From<crate::podcast_feed::Episode> for Episode {
+    fn from(feed_episode: crate::podcast_feed::Episode) -> Self {
+        Self {
+            title: feed_episode.title,
+            description: feed_episode.description,
+            published: parse_date(&feed_episode.pub_date),
+            url: feed_episode.enclosure.url,
+            length: feed_episode.enclosure.length.parse::<i32>().unwrap_or(0),
+            mime_type: feed_episode.enclosure.enclosure_type,
+            duration: feed_episode.itunes_duration,
+            progress: 0,
+            listened: false,
+        }
+    }
+}
+
+pub fn parse_date(date: &str) -> chrono::NaiveDateTime {
+    chrono::NaiveDateTime::parse_from_str(date, "%a, %d %b %Y %H:%M:%S %z")
+        .unwrap_or(chrono::NaiveDateTime::default())
 }
 
 #[test]
-fn parses_xml_one() {
+fn can_parse_podcast_date() {
+    let date = "Wed, 12 May 2021 07:00:00 -0000";
+    let parsed = parse_date(date);
+    assert_eq!(
+        parsed,
+        chrono::NaiveDate::from_ymd_opt(2021, 5, 12)
+            .and_then(|d| d.and_hms_opt(7, 0, 0))
+            .unwrap()
+    );
+}
+
+#[test]
+fn can_convert_from_feed() {
     let xml = include_str!("../test_data/test_feed_one.rss");
-    let podcast = parse_feed(xml).unwrap().podcast;
+    let podcast = crate::podcast_feed::parse_feed(xml).unwrap().podcast;
+    let podcast: Podcast = podcast.into();
     assert_eq!(podcast.title, "Regulation Podcast");
     assert_eq!(podcast.description, "The Regulation Podcast is a show about friendship and embracing absurdity. Join Andrew, Nick, Eric, Geoff and Gavin in a never-ending pursuit to make each other laugh at almost any cost. Whether it's Podcasts, Let's Plays or Anal Waxings something incredibly stupid is always happening and we'd love for you to be along for the ride.\u{a0}");
-    assert_eq!(podcast.image.url, "https://megaphone.imgix.net/podcasts/8f49d8ba-9de6-11ea-8184-d33047a704dc/image/b0198dcae0e6a8eddec040c27f20cded.jpg?ixlib=rails-4.3.1 &max-w=3000 &max-h=3000 &fit=crop &auto=format,compress");
-
-    assert!(podcast
-        .episodes
-        .iter()
-        .any(|episode| episode.title == "Why We Sync // Fastball vs Linebacker [21]"));
-}
-#[test]
-fn parses_xml_two() {
-    let xml = include_str!("../test_data/test_feed_two.rss");
-    let podcast = parse_feed(xml).unwrap().podcast;
-    assert_eq!(podcast.title, "99% Invisible");
-    assert_eq!(podcast.description, "Design is everywhere in our lives, perhaps most importantly in the places where we've just stopped noticing. 99% Invisible is a weekly exploration of the process and power of design and architecture. From award winning producer Roman Mars. Learn more at 99percentinvisible.org.");
-    assert_eq!(podcast.image.url, "https://image.simplecastcdn.com/images/96792a27-13c3-40ce-b933-36bdb43a299e/54c9f8d8-80d8-425d-a3f3-751478db2e52/3000x3000/cover-99percentinvisible-3000x3000-r2021-final.jpg?aid=rss_feed");
-
-    assert!(podcast
-        .episodes
-        .iter()
-        .any(|episode| episode.title == "The Infernal Machine"));
-}
-
-#[test]
-fn parses_xml_three() {
-    let xml = include_str!("../test_data/test_feed_three.rss");
-    let podcast = parse_feed(xml).unwrap().podcast;
-    assert_eq!(podcast.title, "The Anthropocene Reviewed");
-    assert_eq!(podcast.description, "The Anthropocene is the current geological age, in which human activity has profoundly shaped the planet and its biodiversity. On The Anthropocene Reviewed, #1 New York Times bestselling author John Green (The Fault in Our Stars, Turtles All the Way Down) reviews different facets of the human-centered planet on a five-star scale. WNYC Studios is a listener-supported producer of other leading podcasts including On the Media, Snap Judgment, Death, Sex & Money, Nancy and Here’s the Thing with Alec Baldwin. © WNYC Studios");
-    assert_eq!(podcast.image.url, "https://image.simplecastcdn.com/images/d48cf57e-8709-499d-a9c6-1c6264aff730/d7543167-91d7-455a-9048-b1843e740206/3000x3000/tar-complexly.jpg?aid=rss_feed");
-
-    assert!(podcast
-        .episodes
-        .iter()
-        .any(|episode| episode.title == "Lascaux Paintings and the Taco Bell Breakfast Menu"));
+    assert_eq!(podcast.episodes[0], Episode {
+      title: "Why We Sync // Fastball vs Linebacker [21]".to_string(),
+      description: "Geoff, Gavin and Andrew talk about Andrew's recordings, audio syncing, getting distracted, Jolly Green Giant, hot dog enthusiasm, Matt Strahm, baseball mound, hit by a pitch vs hit by a linebacker, terminal velocity of a grape, balloon update, songs of the summer, duel of the fates, falcon tier football pick em loser, kicker picker, open faced mashed hashed cashed sandwich, puzzle times, Geoff's f**kface, and Crime Capsule.
+Sponsored by Cosmic Crisp. Visit http://www.cosmiccrisp.com for merch and recipe ideas. Follow TheCosmicCrisp on Instagram and other social channels. They love to hear from Regulation Podcast fans!
+Support us directly at http://patreon.com/theregulationpod
+Stay up to date, get exclusive supplemental, and connect with other Regulation Listeners.
+Learn more about your ad choices. Visit megaphone.fm/adchoices".to_string(),
+      published: chrono::NaiveDate::from_ymd_opt(2024, 10, 2)
+          .and_then(|d| d.and_hms_opt(7, 0, 0))
+          .unwrap(),
+      url: "https://www.podtrac.com/pts/redirect.mp3/pdst.fm/e/mgln.ai/e/94/claritaspod.com/measure/verifi.podscribe.com/rss/p/pfx.vpixl.com/j0JIg/traffic.megaphone.fm/REGULATIONCOMPANYLLC7453036557.mp3?updated=1727834300".to_string(),
+      length: 0,
+      mime_type: "audio/mpeg".to_string(),
+      duration: Some("4559".to_string()),
+      progress: 0,
+      listened: false,
+    })
 }

@@ -46,7 +46,7 @@ pub fn parse_itunes_response(json: &str) -> Result<ItunesResponse, serde_json::E
 
 #[test]
 fn test_parse_itunes_response() {
-    let json = include_str!("../../test_data/itunes.json");
+    let json = include_str!("../test_data/itunes.json");
     let itunes_response = parse_itunes_response(json).expect("Test data is validated");
     assert_eq!(itunes_response.result_count, 60);
     assert_eq!(itunes_response.results.len(), 60);

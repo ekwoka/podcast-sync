@@ -7,7 +7,7 @@
       - [x] subscribe
         - [x] save subscription info
         - [x] load subscription info
-      - [ ] pull podcast feeds
+      - [x] pull podcast feeds
     - [ ] manage subscriptions
       - [ ] show all podcasts
       - [ ] show all episodes

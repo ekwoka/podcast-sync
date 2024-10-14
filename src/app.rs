@@ -1,4 +1,4 @@
-use api_types::{itunes::*, podcast::*, subscriptions::*};
+use api_types::{itunes::*, podcast_feed::*, subscriptions::*};
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::{html::*, *};
 use serde::{Deserialize, Serialize};
