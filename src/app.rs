@@ -1,5 +1,4 @@
-use api_types::itunes::*;
-use api_types::subscriptions::*;
+use api_types::{itunes::*, podcast::*, subscriptions::*};
 use leptos::leptos_dom::ev::SubmitEvent;
 use leptos::{html::*, *};
 use serde::{Deserialize, Serialize};
@@ -27,9 +26,15 @@ struct SubscribeArgs {
     subscription: Subscription,
 }
 
+#[derive(Serialize, Deserialize)]
+struct LoadPodcastArgs {
+    podcast: Subscription,
+}
+
 #[component]
 pub fn app() -> impl IntoView {
     let query = create_rw_signal(String::new());
+    let selected_podcast = create_rw_signal::<Option<Subscription>>(None);
     let results = create_rw_signal::<Option<Vec<ItunesResult>>>(None);
     let subscriptions = create_resource(
         || (),
@@ -39,6 +44,27 @@ pub fn app() -> impl IntoView {
             subscriptions
         },
     );
+    let podcast = create_resource(
+        move || selected_podcast.get(),
+        |selected_podcast: Option<Subscription>| async move {
+            match selected_podcast {
+                Some(subscription) => {
+                    let response = invoke(
+                        "load_podcast_feed",
+                        serde_wasm_bindgen::to_value(&LoadPodcastArgs {
+                            podcast: subscription,
+                        })
+                        .unwrap(),
+                    )
+                    .await;
+                    let podcast: Podcast = serde_wasm_bindgen::from_value(response).unwrap();
+                    Some(podcast)
+                }
+                None => None,
+            }
+        },
+    );
+
     let subscribe = create_action(move |input: &Subscription| {
         let input = input.clone();
         async move {
@@ -126,8 +152,25 @@ pub fn app() -> impl IntoView {
                         .get()
                         .map(|subs| {
                             view! {
-                                <components::SubscriptionList subscriptions=subs.subscriptions />
+                                <components::SubscriptionList
+                                    subscriptions=subs.subscriptions
+                                    selected_podcast=selected_podcast
+                                />
                             }
+                        })
+                }}
+            </Suspense>
+            <Suspense fallback=|| {
+                div().child("Loading...")
+            }>
+                {move || {
+                    podcast
+                        .get()
+                        .map(|podcast| {
+                            podcast
+                                .map(|podcast| {
+                                    view! { <components::EpisodeList podcast=podcast /> }
+                                })
                         })
                 }}
             </Suspense>

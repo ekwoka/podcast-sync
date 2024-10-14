@@ -15,7 +15,8 @@ pub fn run() {
             commands::search_itunes,
             commands::subscribe,
             commands::unsubscribe,
-            commands::load_subscriptions
+            commands::load_subscriptions,
+            commands::load_podcast_feed,
         ])
         .setup(|app| {
             // allowed the given directory

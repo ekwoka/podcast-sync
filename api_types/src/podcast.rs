@@ -1,4 +1,4 @@
-use quick_xml::de::from_str;
+use quick_xml::{de::from_str, DeError};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone)]
@@ -25,8 +25,6 @@ pub struct Feed {
 pub struct Podcast {
     #[serde(rename = "$text")]
     pub text: Option<String>,
-    #[serde(rename = "atom-link")]
-    pub atom_link: AtomLink,
     pub title: String,
     pub link: String,
     pub language: String,
@@ -34,17 +32,17 @@ pub struct Podcast {
     pub description: String,
     pub image: Image,
     #[serde(rename = "itunes-explicit")]
-    pub itunes_explicit: String,
+    pub itunes_explicit: Option<String>,
     #[serde(rename = "itunes-type")]
-    pub itunes_type: String,
+    pub itunes_type: Option<String>,
     #[serde(rename = "itunes-subtitle")]
-    pub itunes_subtitle: String,
+    pub itunes_subtitle: Option<String>,
     #[serde(rename = "itunes-author")]
-    pub itunes_author: String,
+    pub itunes_author: Option<String>,
     #[serde(rename = "itunes-summary")]
-    pub itunes_summary: String,
+    pub itunes_summary: Option<String>,
     #[serde(rename = "encoded")]
-    pub content_encoded: String,
+    pub content_encoded: Option<String>,
     #[serde(rename = "itunes-owner")]
     pub itunes_owner: ItunesOwner,
     /*     #[serde(rename = "image")]
@@ -111,19 +109,19 @@ pub struct Episode {
     #[serde(rename = "pubDate")]
     pub pub_date: String,
     #[serde(rename = "itunes-title")]
-    pub itunes_title: String,
+    pub itunes_title: Option<String>,
     #[serde(rename = "itunes-episodeType")]
-    pub itunes_episode_type: String,
+    pub itunes_episode_type: Option<String>,
     #[serde(rename = "itunes-author")]
-    pub itunes_author: String,
+    pub itunes_author: Option<String>,
     #[serde(rename = "itunes-subtitle")]
-    pub itunes_subtitle: String,
+    pub itunes_subtitle: Option<String>,
     #[serde(rename = "itunes-summary")]
-    pub itunes_summary: String,
+    pub itunes_summary: Option<String>,
     #[serde(rename = "encoded")]
-    pub content_encoded: String,
+    pub content_encoded: Option<String>,
     #[serde(rename = "itunes-duration")]
-    pub itunes_duration: String,
+    pub itunes_duration: Option<String>,
     pub guid: Guid,
     pub enclosure: Enclosure,
     #[serde(rename = "itunes-explicit")]
@@ -155,15 +153,15 @@ pub struct Enclosure {
     pub enclosure_type: String,
 }
 
-pub fn parse_feed(xml: &str) -> Feed {
-    from_str(&xml.replace("itunes:", "itunes-").replace("atom:", "atom-")).unwrap()
+pub fn parse_feed(xml: &str) -> Result<Feed, DeError> {
+    let feed: Feed = from_str(&xml.replace("itunes:", "itunes-").replace("atom:", "atom-"))?;
+    Ok(feed)
 }
 
 #[test]
-fn parses_xml() {
-    let xml = include_str!("../../test_data/feed.rss");
-    let podcast = parse_feed(xml).podcast;
-    assert_eq!(podcast.atom_link.href, "https://feeds.megaphone.fm/fface");
+fn parses_xml_one() {
+    let xml = include_str!("../test_data/test_feed_one.rss");
+    let podcast = parse_feed(xml).unwrap().podcast;
     assert_eq!(podcast.title, "Regulation Podcast");
     assert_eq!(podcast.description, "The Regulation Podcast is a show about friendship and embracing absurdity. Join Andrew, Nick, Eric, Geoff and Gavin in a never-ending pursuit to make each other laugh at almost any cost. Whether it's Podcasts, Let's Plays or Anal Waxings something incredibly stupid is always happening and we'd love for you to be along for the ride.\u{a0}");
     assert_eq!(podcast.image.url, "https://megaphone.imgix.net/podcasts/8f49d8ba-9de6-11ea-8184-d33047a704dc/image/b0198dcae0e6a8eddec040c27f20cded.jpg?ixlib=rails-4.3.1 &max-w=3000 &max-h=3000 &fit=crop &auto=format,compress");
@@ -171,5 +169,18 @@ fn parses_xml() {
     assert!(podcast
         .episodes
         .iter()
-        .any(|episode| episode.title == "Why We Sync // Fastball vs Linebacker [21]"))
+        .any(|episode| episode.title == "Why We Sync // Fastball vs Linebacker [21]"));
+}
+#[test]
+fn parses_xml_two() {
+    let xml = include_str!("../test_data/test_feed_two.rss");
+    let podcast = parse_feed(xml).unwrap().podcast;
+    assert_eq!(podcast.title, "99% Invisible");
+    assert_eq!(podcast.description, "Design is everywhere in our lives, perhaps most importantly in the places where we've just stopped noticing. 99% Invisible is a weekly exploration of the process and power of design and architecture. From award winning producer Roman Mars. Learn more at 99percentinvisible.org.");
+    assert_eq!(podcast.image.url, "https://image.simplecastcdn.com/images/96792a27-13c3-40ce-b933-36bdb43a299e/54c9f8d8-80d8-425d-a3f3-751478db2e52/3000x3000/cover-99percentinvisible-3000x3000-r2021-final.jpg?aid=rss_feed");
+
+    assert!(podcast
+        .episodes
+        .iter()
+        .any(|episode| episode.title == "The Infernal Machine"));
 }
