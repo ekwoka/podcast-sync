@@ -79,8 +79,7 @@ impl From<crate::podcast_feed::Episode> for Episode {
 }
 
 pub fn parse_date(date: &str) -> chrono::NaiveDateTime {
-    chrono::NaiveDateTime::parse_from_str(date, "%a, %d %b %Y %H:%M:%S %z")
-        .unwrap_or(chrono::NaiveDateTime::default())
+    chrono::NaiveDateTime::parse_from_str(date, "%a, %d %b %Y %H:%M:%S %z").unwrap_or_default()
 }
 
 #[test]
