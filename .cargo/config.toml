@@ -1,0 +1,8 @@
+[alias]
+make = ["bin", "cargo-make"]
+nextest = ["bin", "cargo-nextest"]
+tauri = ["bin", "cargo-tauri"]
+watch = ["bin", "cargo-watch"]
+stylance = ["bin", "stylance"]
+leptosfmt = ["bin", "leptosfmt"]
+trunk = ["bin", "trunk"]
