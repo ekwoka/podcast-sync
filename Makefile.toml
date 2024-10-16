@@ -6,7 +6,11 @@ load_cargo_aliases = true
 alias = "build"
 
 [tasks.watch]
-script = "cargo watch -x clippy -x 'fmt --all' -x leptosfmt -x nextest -x stylance"
+script = "cargo watch -x clippy -x 'fmt --all' -x leptosfmt -x nextest"
+
+[tasks.styles]
+command = "cargo"
+args = ["stylance", "--watch"]
 
 [tasks.fmt]
 command = "cargo"
@@ -19,6 +23,8 @@ run_task = { name = ["watch", "serve"], parallel = true }
 command = "cargo"
 args = ["tauri", "dev"]
 
+[tasks.precommit]
+dependencies = ["clippy", "fmt", "leptosfmt", "nextest", "stylance"]
 
 [tasks.build]
 condition = { files_modified = { input = [

@@ -1,5 +1,7 @@
 mod app;
 mod components;
+mod routes;
+mod utils;
 
 use app::*;
 use leptos::*;

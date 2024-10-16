@@ -19,6 +19,7 @@ ron = "0.8.1"
 stylance = "0.5.1"
 strum_macros = "0.26.4"
 chrono = "0.4.38"
+leptos_router = { version = "0.6.15", features = ["csr"] }
 
 [workspace]
 members = ["api_types", "src-tauri"]
