@@ -8,9 +8,3 @@ body {
   flex-direction: column;
   gap: 16px;
 }
-
-.results_grid {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(3, 1fr);
-}

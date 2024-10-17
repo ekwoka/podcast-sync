@@ -49,4 +49,4 @@ cargo-watch = { version = "8.5.3" }
 leptosfmt = { version = "0.1.32" }
 stylance-cli = { version = "0.5.1", bins = ["stylance"] }
 tauri-cli = { version = "2.0.3", bins = ["cargo-tauri"] }
-trunk = { version = "0.21.0" }
+trunk = { version = "0.21.1" }

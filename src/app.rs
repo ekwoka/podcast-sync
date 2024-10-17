@@ -19,6 +19,7 @@ struct LoadPodcastArgs {
 
 #[component]
 pub fn app() -> impl IntoView {
+    /*
     let selected_podcast = create_rw_signal::<Option<Subscription>>(None);
     let subscriptions = create_resource(
         || (),
@@ -48,21 +49,7 @@ pub fn app() -> impl IntoView {
             }
         },
     );
-
-    let subscribe = create_action(move |input: &Subscription| {
-        let input = input.clone();
-        async move {
-            invoke(
-                "subscribe",
-                serde_wasm_bindgen::to_value(&SubscribeArgs {
-                    subscription: input,
-                })
-                .unwrap(),
-            )
-            .await;
-            subscriptions.refetch();
-        }
-    });
+    */
 
     view! {
         <Router>
