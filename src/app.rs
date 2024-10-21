@@ -59,6 +59,8 @@ pub fn app() -> impl IntoView {
                     <Routes>
                         <Route path="/" view=root::View />
                         <Route path="/search" view=search::View />
+                        <Route path="/library" view=library::View />
+                        <Route path="/library/:id" view=library::id::View />
                     </Routes>
                 </main>
             </div>
@@ -67,42 +69,6 @@ pub fn app() -> impl IntoView {
 }
 
 /*
-{move || match results.get() {
-                        None => div().child("No Results"),
-                        Some(results) => {
-                            view! {
-                                <div class=styles::results_grid>
-                                    {results
-                                        .clone()
-                                        .iter()
-                                        .map(|result| {
-                                            components::ItunesResult(components::ItunesResultProps {
-                                                show: result.clone(),
-                                                subscribe,
-                                            })
-                                        })
-                                        .collect_view()}
-                                </div>
-                            }
-                        }
-                    }}
-                </div>
-                <Suspense fallback=|| {
-                    div().child("Loading...")
-                }>
-                    {move || {
-                        subscriptions
-                            .get()
-                            .map(|subs| {
-                                view! {
-                                    <components::SubscriptionList
-                                        subscriptions=subs.subscriptions
-                                        selected_podcast=selected_podcast
-                                    />
-                                }
-                            })
-                    }}
-                </Suspense>
                 <Suspense fallback=|| {
                     div().child("Loading...")
                 }>

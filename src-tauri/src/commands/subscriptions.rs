@@ -68,6 +68,17 @@ pub fn load_subscriptions<R: tauri::Runtime>(webview: tauri::Webview<R>) -> Subs
     retrieve_subscriptions(&webview)
 }
 
+#[tauri::command]
+pub fn load_subscription<R: tauri::Runtime>(
+    webview: tauri::Webview<R>,
+    subscription_id: i32,
+) -> Option<Subscription> {
+    retrieve_subscriptions(&webview)
+        .subscriptions
+        .into_iter()
+        .find(|s| s.id == subscription_id)
+}
+
 fn retrieve_subscriptions<R: tauri::Runtime>(webview: &tauri::Webview<R>) -> Subscriptions {
     SafeFilePath::from_str("subscriptions.ron")
         .ok()

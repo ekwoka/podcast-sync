@@ -16,6 +16,7 @@ pub fn run() {
             commands::subscribe,
             commands::unsubscribe,
             commands::load_subscriptions,
+            commands::load_subscription,
             commands::load_podcast_feed,
         ])
         .setup(|app| {

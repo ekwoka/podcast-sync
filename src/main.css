@@ -2,6 +2,11 @@ body {
   font-family: sans-serif;
 }
 
+h2 {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
 .main {
   padding: 16px 24px;
   display: flex;
