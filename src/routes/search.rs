@@ -1,5 +1,5 @@
 use crate::{
-    components::{ItunesResult, ItunesResultProps},
+    components::{ItunesResult, ItunesResultProps, SearchBar},
     utils::*,
 };
 use api_types::{itunes::ItunesResponse, subscriptions::Subscription};
@@ -57,6 +57,9 @@ pub fn view() -> impl IntoView {
     });
     view! {
         <div>
+            <SearchBar initial=query
+                .with(|qs| qs.as_ref().ok().and_then(|qs| qs.q.clone()))
+                .unwrap_or_default() />
             <h2>"Results"</h2>
             <div>
                 {move || match results.get() {

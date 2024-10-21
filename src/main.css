@@ -2,9 +2,14 @@ body {
   font-family: sans-serif;
 }
 
-.container {
+.main {
   padding: 16px 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  flex-grow: 1;
+}
+
+.layout {
+  display: flex;
 }

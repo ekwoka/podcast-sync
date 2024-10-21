@@ -1,6 +1,6 @@
+use crate::components::Navigation;
 use crate::routes::*;
-use crate::utils::*;
-use api_types::{podcast_feed::*, subscriptions::*};
+use api_types::subscriptions::*;
 use leptos::*;
 use leptos_router::*;
 use serde::{Deserialize, Serialize};
@@ -53,12 +53,15 @@ pub fn app() -> impl IntoView {
 
     view! {
         <Router>
-            <main class=styles::container>
-                <Routes>
-                    <Route path="/" view=root::View />
-                    <Route path="/search" view=search::View />
-                </Routes>
-            </main>
+            <div class=styles::layout>
+                <Navigation />
+                <main class=styles::main>
+                    <Routes>
+                        <Route path="/" view=root::View />
+                        <Route path="/search" view=search::View />
+                    </Routes>
+                </main>
+            </div>
         </Router>
     }
 }
