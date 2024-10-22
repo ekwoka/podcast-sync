@@ -18,14 +18,14 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2.0.2", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.6", features = [] }
-tauri-plugin-shell = "2.0.2"
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-tauri-plugin-fs = "2"
-ron = "0.8.1"
 api_types = { path = "../api_types" }
+ron = "0.8.1"
+serde = { version = "1.0.211", features = ["derive"] }
+serde_json = "1.0.132"
+tauri = { version = "2.0.6", features = [] }
+tauri-plugin-fs = "2.0.3"
 tauri-plugin-http = "2.0.3"
+tauri-plugin-shell = "2.0.2"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

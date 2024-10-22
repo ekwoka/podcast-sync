@@ -1,4 +1,4 @@
-use crate::components::EpisodeList;
+use crate::components::{EpisodeList, PodcastSummary};
 use crate::utils::*;
 use api_types::{podcast_feed::Podcast, subscriptions::Subscription};
 use leptos::{html::*, *};
@@ -76,7 +76,12 @@ pub fn view() -> impl IntoView {
                     .map(|podcast| {
                         podcast
                             .map(|podcast| {
-                                view! { <EpisodeList podcast=podcast /> }
+                                view! {
+                                    <div>
+                                        <PodcastSummary podcast=podcast.clone() />
+                                        <EpisodeList podcast=podcast />
+                                    </div>
+                                }
                             })
                     })
             }}
