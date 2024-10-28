@@ -20,7 +20,7 @@ tauri-build = { version = "2.0.2", features = [] }
 [dependencies]
 api_types = { path = "../api_types" }
 ron = "0.8.1"
-serde = { version = "1.0.211", features = ["derive"] }
+serde = { version = "1.0.214", features = ["derive"] }
 serde_json = "1.0.132"
 tauri = { version = "2.0.6", features = [] }
 tauri-plugin-fs = "2.0.3"

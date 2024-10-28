@@ -9,8 +9,8 @@
         - [x] load subscription info
       - [x] pull podcast feeds
     - [ ] manage subscriptions
-      - [ ] show all podcasts
-      - [ ] show all episodes
+      - [x] show all podcasts
+      - [x] show all episodes
   - [ ] listen to podcasts
     - [ ] select and play episode
     - [ ] skip 15 seconds

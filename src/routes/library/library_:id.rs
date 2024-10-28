@@ -1,4 +1,4 @@
-use crate::components::{EpisodeList, PodcastSummary};
+use crate::components::{EpisodeList, PodcastSettings, PodcastSummary};
 use crate::utils::*;
 use api_types::{podcast_feed::Podcast, subscriptions::Subscription};
 use leptos::{html::*, *};
@@ -79,6 +79,11 @@ pub fn view() -> impl IntoView {
                                 view! {
                                     <div>
                                         <PodcastSummary podcast=podcast.clone() />
+                                        <PodcastSettings podcast_id=params
+                                            .with(|params| {
+                                                params.as_ref().map(|params| params.id).unwrap_or_default()
+                                            })
+                                            .unwrap_or_default() />
                                         <EpisodeList podcast=podcast />
                                     </div>
                                 }
