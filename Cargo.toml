@@ -44,9 +44,9 @@ class_name_pattern = "[name]-[hash]"
 
 [workspace.metadata.bin]
 cargo-make = { version = "0.37.23" }
-cargo-nextest = { version = "0.9.81" }
+cargo-nextest = { version = "0.9.87" }
 cargo-watch = { version = "8.5.3" }
 leptosfmt = { version = "0.1.32" }
-stylance-cli = { version = "0.5.1", bins = ["stylance"] }
-tauri-cli = { version = "2.0.4", bins = ["cargo-tauri"] }
-trunk = { version = "0.21.1" }
+stylance-cli = { version = "0.5.3", bins = ["stylance"] }
+tauri-cli = { version = "2.2.0", bins = ["cargo-tauri"] }
+trunk = { version = "0.21.5" }
