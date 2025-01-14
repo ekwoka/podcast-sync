@@ -22,8 +22,9 @@ pub fn run() {
         .setup(|app| {
             // allowed the given directory
             let scope = app.fs_scope();
-            scope.allow_directory("/", true);
-            dbg!(scope.allowed());
+            scope
+                .allow_directory("/", true)
+                .expect("Directory access is required");
 
             Ok(())
         })

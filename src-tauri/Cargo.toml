@@ -15,17 +15,17 @@ name = "podcast_sync_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.0.2", features = [] }
+tauri-build = { version = "2.0.5", features = [] }
 
 [dependencies]
 api_types = { path = "../api_types" }
 ron = "0.8.1"
-serde = { version = "1.0.214", features = ["derive"] }
-serde_json = "1.0.132"
-tauri = { version = "2.0.6", features = [] }
-tauri-plugin-fs = "2.0.3"
-tauri-plugin-http = "2.0.3"
-tauri-plugin-shell = "2.0.2"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.135"
+tauri = { version = "2.2.2", features = [] }
+tauri-plugin-fs = "2.2.0"
+tauri-plugin-http = "2.2.0"
+tauri-plugin-shell = "2.2.0"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.

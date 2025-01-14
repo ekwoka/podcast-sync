@@ -6,20 +6,20 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 api_types = { path = "./api_types" }
-chrono = "0.4.38"
+chrono = "0.4.39"
 console_error_panic_hook = "0.1.7"
-js-sys = "0.3.72"
+js-sys = "0.3.77"
 leptos = { version = "0.6.15", features = ["csr"] }
 leptos_router = { version = "0.6.15", features = ["csr"] }
 ron = "0.8.1"
-serde = { version = "1.0.214", features = ["derive"] }
-serde_json = "1.0.132"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.135"
 serde_repr = "0.1.19"
 serde-wasm-bindgen = "0.6.5"
 strum_macros = "0.26.4"
-stylance = "0.5.1"
-wasm-bindgen = "0.2.95"
-wasm-bindgen-futures = "0.4.45"
+stylance = "0.5.3"
+wasm-bindgen = "0.2.100"
+wasm-bindgen-futures = "0.4.50"
 
 [workspace]
 members = ["api_types", "src-tauri"]
@@ -48,5 +48,5 @@ cargo-nextest = { version = "0.9.87" }
 cargo-watch = { version = "8.5.3" }
 leptosfmt = { version = "0.1.32" }
 stylance-cli = { version = "0.5.3", bins = ["stylance"] }
-tauri-cli = { version = "2.2.0", bins = ["cargo-tauri"] }
+tauri-cli = { version = "2.2.4", bins = ["cargo-tauri"] }
 trunk = { version = "0.21.5" }
