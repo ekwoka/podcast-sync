@@ -1,0 +1,68 @@
+{
+  "name": "Rust",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/rust:1": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/lee-orr/rusty-dev-containers/cargo-binstall:0": {
+      "packages": "cargo-run-bin"
+    },
+    "ghcr.io/wxw-matt/devcontainer-features/command_runner:latest": {
+      "command1": "apt-get update",
+      "command2": "apt-get upgrade -y",
+      "command3": "apt-get install pkg-config libglib2.0-dev libgtk-3-dev libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev javascriptcoregtk-4.1 libsoup-3.0 webkit2gtk-4.1 -y"
+    }
+  },
+
+  "overrideFeatureInstallOrder": [
+    "ghcr.io/devcontainers/features/common-utils:2",
+    "ghcr.io/devcontainers/features/git:1",
+    "ghcr.io/devcontainers/features/rust:1",
+    "ghcr.io/wxw-matt/devcontainer-features/command_runner:latest",
+    "ghcr.io/lee-orr/rusty-dev-containers/cargo-binstall:0"
+  ],
+
+  "mounts": [
+    {
+      "source": "devcontainer-cargo-cache-${devcontainerId}",
+      "target": "/usr/local/cargo",
+      "type": "volume"
+    },
+    {
+      "source": "devcontainer-target-cache-${devcontainerId}",
+      "target": "/workspaces/podcast-sync/target",
+      "type": "volume"
+    },
+    {
+      "source": "devcontainer-bin-cache-${devcontainerId}",
+      "target": "/workspaces/podcast-sync/.bin",
+      "type": "volume"
+    }
+  ],
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "lldb.executable": "/usr/bin/lldb",
+        "files.watcherExclude": {
+          "**/target/**": true
+        },
+        "rust-analyzer.checkOnSave.command": "clippy"
+      },
+
+      "extensions": [
+        "vadimcn.vscode-lldb",
+        "mutantdino.resourcemonitor",
+        "rust-lang.rust-analyzer",
+        "tamasfe.even-better-toml",
+        "serayuzgur.crates"
+      ]
+    }
+  },
+
+  "onCreateCommand": "rustup target add wasm32-unknown-unknown",
+  "updateContentCommand": "cargo make build",
+
+  "remoteUser": "root"
+}
